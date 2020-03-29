@@ -27,6 +27,7 @@ using Skoruba.IdentityServer4.Admin.EntityFramework.PostgreSQL.Extensions;
 using Skoruba.IdentityServer4.Admin.EntityFramework.Shared.Configuration;
 using Skoruba.IdentityServer4.Admin.EntityFramework.SqlServer.Extensions;
 using Skoruba.IdentityServer4.Admin.EntityFramework.Helpers;
+using Skoruba.IdentityServer4.Admin.EntityFramework.Shared.Entities.Identity;
 
 namespace Skoruba.IdentityServer4.STS.Identity.Helpers
 {
@@ -275,12 +276,13 @@ namespace Skoruba.IdentityServer4.STS.Identity.Helpers
         /// <typeparam name="TPersistedGrantDbContext"></typeparam>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
-        public static IIdentityServerBuilder AddIdentityServer<TConfigurationDbContext, TPersistedGrantDbContext, TUserIdentity>(
+        public static IIdentityServerBuilder AddIdentityServer<TConfigurationDbContext, TPersistedGrantDbContext, TUserIdentity, TUserIdentityRole>(
             this IServiceCollection services,
             IConfiguration configuration)
             where TPersistedGrantDbContext : DbContext, IAdminPersistedGrantDbContext
             where TConfigurationDbContext : DbContext, IAdminConfigurationDbContext
-            where TUserIdentity : class
+            where TUserIdentity : UserIdentity
+            where TUserIdentityRole : UserIdentityRole
         {
             var builder = services.AddIdentityServer(options =>
                 {
@@ -295,6 +297,8 @@ namespace Skoruba.IdentityServer4.STS.Identity.Helpers
 
             builder.AddCustomSigningCredential(configuration);
             builder.AddCustomValidationKey(configuration);
+
+            builder.AddResourceOwnerValidator<ScopeCleanResourceOwnerPasswordValidator<UserIdentity, UserIdentityRole>>();
 
             return builder;
         }

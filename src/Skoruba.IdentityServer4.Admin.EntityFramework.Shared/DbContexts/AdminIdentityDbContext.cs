@@ -9,7 +9,7 @@ namespace Skoruba.IdentityServer4.Admin.EntityFramework.Shared.DbContexts
     {
         public AdminIdentityDbContext(DbContextOptions<AdminIdentityDbContext> options) : base(options)
         {
-            
+
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -29,6 +29,18 @@ namespace Skoruba.IdentityServer4.Admin.EntityFramework.Shared.DbContexts
             builder.Entity<UserIdentityUserLogin>().ToTable(TableConsts.IdentityUserLogins);
             builder.Entity<UserIdentityUserClaim>().ToTable(TableConsts.IdentityUserClaims);
             builder.Entity<UserIdentityUserToken>().ToTable(TableConsts.IdentityUserTokens);
+
+            builder.Entity<UserIdentityRoleScope>(entityBuilder =>
+            {
+                entityBuilder.ToTable(TableConsts.IdentityRoleScopes);
+                entityBuilder.HasOne(e => e.Role).WithMany(e => e.AllowedScopes).HasForeignKey(e => e.RoleId);
+            });
+
+            builder.Entity<UserIdentityScope>(entityBuilder =>
+            {
+                entityBuilder.ToTable(TableConsts.IdentityUserScopes);
+                entityBuilder.HasOne(e => e.User).WithMany(e => e.AllowedScopes).HasForeignKey(e => e.UserId);
+            });
         }
     }
 }

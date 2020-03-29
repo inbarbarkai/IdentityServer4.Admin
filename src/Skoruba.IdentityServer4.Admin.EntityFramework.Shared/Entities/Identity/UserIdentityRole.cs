@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace Skoruba.IdentityServer4.Admin.EntityFramework.Shared.Entities.Identity
 {
-	public class UserIdentityRole : IdentityRole
-	{
-		
-	}
+    public class UserIdentityRole : IdentityRole
+    {
+        public List<UserIdentityRoleScope> AllowedScopes { get; set; }
+    }
 }
