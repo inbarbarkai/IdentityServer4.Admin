@@ -54,6 +54,31 @@ namespace Skoruba.IdentityServer4.STS.Identity.Services
 
                 var scopes = context.Request.Scopes.Join(allowedScopes, k => k, k => k, (a, b) => a);
                 context.Request.Scopes = new HashSet<string>(scopes);
+
+                if (context.Request.ValidatedScopes.GrantedResources.ApiResources != null)
+                {
+                    foreach (var resource in context.Request.ValidatedScopes.GrantedResources.ApiResources)
+                    {
+                        foreach (var scope in resource.Scopes.ToArray())
+                        {
+                            if (!context.Request.Scopes.Contains(scope.Name))
+                            {
+                                resource.Scopes.Remove(scope);
+                            }
+                        }
+                    }
+                }
+
+                if (context.Request.ValidatedScopes.GrantedResources.IdentityResources != null)
+                {
+                    foreach (var resource in context.Request.ValidatedScopes.GrantedResources.IdentityResources.ToArray())
+                    {
+                        if (!context.Request.Scopes.Contains(resource.Name))
+                        {
+                            context.Request.ValidatedScopes.GrantedResources.IdentityResources.Remove(resource);
+                        }
+                    }
+                }
             }
         }
     }
