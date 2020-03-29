@@ -153,6 +153,46 @@ namespace Skoruba.IdentityServer4.Admin.EntityFramework.PostgreSQL.Migrations.Id
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserScopes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<string>(nullable: false),
+                    Scope = table.Column<string>(nullable: false, maxLength: 200)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserScopes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserScopes_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoleScopes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RoleId = table.Column<string>(nullable: false),
+                    Scope = table.Column<string>(nullable: false, maxLength: 200)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleScopes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoleScopes_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
                 table: "RoleClaims",
@@ -189,6 +229,18 @@ namespace Skoruba.IdentityServer4.Admin.EntityFramework.PostgreSQL.Migrations.Id
                 table: "Users",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserScopes_UserId",
+                table: "UserScopes",
+                column: "UserId",
+                unique: false);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleScopes_RoleId",
+                table: "RoleScopes",
+                column: "RoleId",
+                unique: false);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
