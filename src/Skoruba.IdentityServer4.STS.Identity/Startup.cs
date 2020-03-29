@@ -66,8 +66,8 @@ namespace Skoruba.IdentityServer4.STS.Identity
 
             app.UseRouting();
             app.UseAuthorization();
-            app.UseEndpoints(endpoint => 
-            { 
+            app.UseEndpoints(endpoint =>
+            {
                 endpoint.MapDefaultControllerRoute();
                 endpoint.MapHealthChecks("/health", new HealthCheckOptions
                 {
@@ -84,7 +84,7 @@ namespace Skoruba.IdentityServer4.STS.Identity
         public virtual void RegisterAuthentication(IServiceCollection services)
         {
             services.AddAuthenticationServices<AdminIdentityDbContext, UserIdentity, UserIdentityRole>(Configuration);
-            services.AddIdentityServer<IdentityServerConfigurationDbContext, IdentityServerPersistedGrantDbContext, UserIdentity>(Configuration);
+            services.AddIdentityServer<IdentityServerConfigurationDbContext, IdentityServerPersistedGrantDbContext, UserIdentity, UserIdentityRole>(Configuration);
         }
 
         public virtual void RegisterAuthorization(IServiceCollection services)
